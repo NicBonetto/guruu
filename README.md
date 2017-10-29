@@ -1,0 +1,2 @@
+# guruu
+Decentralized poll application
