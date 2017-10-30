@@ -4,8 +4,6 @@ This is a React/Golang/Ethereum/IPSF stacked web application used to create and 
 
 Create an account and participate in polls, or create your own poll. 
 
-# Run Locally
-
 # Preview
 
 # Technologies
