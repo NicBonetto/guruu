@@ -2,68 +2,82 @@ pragma solidity ^0.4.18;
 
 contract Polls {
     struct Poll {
-        bytes32 title;
-        bytes32 option1;
-        bytes32 option2;
+        string title;
+        string option1;
+        string option2;
         uint count1;
         uint count2;
+        mapping (address => bool) voter;
         bool exists;
     }
 
-    mapping (bytes32 => Poll) public polls;
+    mapping (string => Poll) polls;
+    
+    Poll public newPoll;
 
-    function createPoll (bytes32 _name, bytes32 _option1, bytes32 _option2) public {
-        Poll memory newPoll;
+    function createPoll (string _name, string _option1, string _option2) public {
 
         newPoll.title = _name;
         newPoll.option1 = _option1;
         newPoll.option2 = _option2;
         newPoll.count1 = 0;
         newPoll.count2 = 0;
+        newPoll.voter[msg.sender] = false;
         newPoll.exists = true;
 
         polls[newPoll.title] = newPoll;
     }
 
-    function vote (bytes32 optionName, bytes32 pollName) public {
+    function vote (string optionName, string pollName) public {
         require(doesPollExist(pollName));
+        require(hasAlreadyVoted(pollName));
+        
+        polls[pollName].voter[msg.sender] = true;
 
-        if (polls[pollName].option1 == optionName) {
+        if (keccak256(polls[pollName].option1) == keccak256(optionName)) {
             polls[pollName].count1 += 1;
         } else {
             polls[pollName].count2 += 1;
         }
     }
 
-    function getPollName (bytes32 pollName) public view returns (bytes32) {
+    function getPollName (string pollName) public view returns (string) {
         require(doesPollExist(pollName));
 
         return polls[pollName].title;
     }
 
-    function getPollOptions (bytes32 pollName) public view returns (bytes32[] options) {
-        require(doesPollExist(pollName));
- 
-        options[0] = polls[pollName].option1;
-        options[1] = polls[pollName].option2;
-
-        return options;
-    }
-
-    function getPollCounts (bytes32 pollName) public view returns (uint[] counts) {
+    function getOption1 (string pollName) public view returns (string) {
         require(doesPollExist(pollName));
 
-        counts[0] = polls[pollName].count1;
-        counts[1] = polls[pollName].count2;
+        return polls[pollName].option1;
+    }
+    
+    function getOption2 (string pollName) public view returns (string) {
+         require(doesPollExist(pollName));
 
-        return counts;
+        return polls[pollName].option2;
     }
 
-    function doesPollExist (bytes32 pollName) private view returns (bool) {
+    function getPollCounts (string pollName) public view returns (uint[2]) {
+        require(doesPollExist(pollName));
+
+        return [polls[pollName].count1, polls[pollName].count2];
+    }
+
+    function doesPollExist (string pollName) private view returns (bool) {
         if (polls[pollName].exists) {
             return true;
         } else {
             return false;
+        }
+    }
+    
+    function hasAlreadyVoted (string pollName) private view returns (bool) {
+        if (polls[pollName].voter[msg.sender]) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
