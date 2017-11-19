@@ -1,6 +1,6 @@
 # guruu
 ### A decentralized poll application. 
-This is a React/Ethereum/Solidity stacked web application used to create and save polls.
+This is a React/Ethereum/Solidity/IPFS stacked web application used to create and save polls.
 
 Participate in polls, or create your own poll. 
 
