@@ -4,7 +4,6 @@ This is a React/Ethereum/Solidity/IPFS stacked web application used to create an
 
 Participate in polls, or create your own poll. 
 
-*Important Note: This was created on a test platform for Ethereum. It does not use real currency.*
 # Preview
 
 # Technologies
